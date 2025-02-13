@@ -1,43 +1,35 @@
-import React from 'react';
+"use client"
 
-// Constants for therapy data
-const therapies = [
-  {
-    id: 1,
-    name: 'Music Beat Therapy',
-    description:
-      'Music Beat Therapy uses rhythm and beats to relax the mind and body, helping you relieve stress and regain inner peace.',
-    benefits: 'Reduces stress, improves mood, boosts mental clarity.',
-    image: '/path-to-image.jpg', // Replace with actual image URL
-  },
-  {
-    id: 2,
-    name: 'Guided Meditation Therapy',
-    description:
-      'Guided Meditation Therapy helps to relax the mind through soothing voices and calming exercises to reduce anxiety and stress.',
-    benefits: 'Calms the mind, reduces anxiety, improves focus.',
-    image: '/path-to-image.jpg', // Replace with actual image URL
-  },
-  {
-    id: 3,
-    name: 'Breathing Exercises Therapy',
-    description:
-      'Breathing exercises focus on deep and controlled breathing to help reduce stress, tension, and anxiety.',
-    benefits: 'Improves relaxation, reduces heart rate, relieves tension.',
-    image: '/path-to-image.jpg', // Replace with actual image URL
-  },
-  {
-    id: 4,
-    name: 'Aromatherapy',
-    description:
-      'Aromatherapy uses essential oils and pleasant scents to create a calming effect on the mind and body.',
-    benefits: 'Boosts mood, improves relaxation, relieves tension.',
-    image: '/path-to-image.jpg', // Replace with actual image URL
-  },
-  // Add more therapies as needed
-];
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/utils/supabase/client'; // Adjust the path as necessary
 
 const Therapy = () => {
+  const [therapies, setTherapies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Fetch therapy data from Supabase
+  useEffect(() => {
+    const fetchTherapies = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase.from('therapy').select('*');
+        if (error) throw error;
+        setTherapies(data);
+      } catch (err) {
+        setError('Error fetching therapies');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTherapies();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <div className="min-h-screen bg-blue-50 py-12">
       <div className="container mx-auto px-6">
@@ -52,12 +44,12 @@ const Therapy = () => {
             >
               <div className="relative">
                 <img
-                  src={therapy.image}
-                  alt={therapy.name}
+                  src={therapy.imageurl} // Assume 'imageurl' is the column name
+                  alt={therapy.nametherapy}
                   className="w-full h-48 object-cover"
                 />
                 <div className="absolute bottom-4 left-4 text-white font-semibold bg-blue-500 bg-opacity-70 p-2 rounded-md">
-                  {therapy.name}
+                  {therapy.nametherapy}
                 </div>
               </div>
 
@@ -68,9 +60,14 @@ const Therapy = () => {
                     <span className="font-semibold">Benefits:</span> {therapy.benefits}
                   </p>
                 </div>
-                <button className="mt-6 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors w-full">
+                <a
+                  href={therapy.link} // Assuming 'link' is the column name
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors w-full text-center"
+                >
                   Learn More
-                </button>
+                </a>
               </div>
             </div>
           ))}

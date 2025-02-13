@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-[70vh]">
+    <section className="relative min-h-[90vh] ml-56">
       <div className="container mx-auto px-6 md:flex md:items-center md:justify-between mt-16">
         {/* Left Section */}
         <div className="md:w-1/2 pl-10">
@@ -21,7 +21,7 @@ const Hero: React.FC = () => {
           </p>
 
           <button className="mt-10 px-6 py-3 text-blue-500 rounded-md transition-transform transform hover:scale-105 hover:bg-blue-500 hover:text-white">
-            <Link href="/learn-more" className="transition-colors">
+            <Link href="/chatbot" className="transition-colors">
               Learn More
             </Link>
           </button>
